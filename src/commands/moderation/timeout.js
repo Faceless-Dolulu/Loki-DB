@@ -73,8 +73,8 @@ module.exports = {
     options: [
         {
             name: 'target-user',
-            description: 'The user to timeout',
-            type: ApplicationCommandOptionType.Mentionable,
+            description: 'The user to timeout. Accepts User ID and User Mention',
+            type: ApplicationCommandOptionType.User,
             required: true,
         },
         {

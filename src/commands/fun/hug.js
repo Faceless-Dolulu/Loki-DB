@@ -53,7 +53,7 @@ module.exports = {
             name: 'target-user',
             description: 'The user you want to hug.',
             required: true,
-            type: ApplicationCommandOptionType.Mentionable
+            type: ApplicationCommandOptionType.User
         }
     ],
 }

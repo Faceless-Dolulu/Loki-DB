@@ -56,9 +56,9 @@ module.exports = {
     options: [
         {
             name: 'target-user',
-            description: 'The user to ban.',
+            description: 'The user to ban. Accepts User ID or User Mention',
             required: true,
-            type: ApplicationCommandOptionType.Mentionable
+            type: ApplicationCommandOptionType.User
         },
         {
             name: 'reason',

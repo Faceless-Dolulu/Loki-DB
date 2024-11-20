@@ -32,9 +32,9 @@ module.exports = {
 	options: [
 		{
 			name: 'target-user',
-			description: 'The user to unban.',
+			description: 'The user to unban. Accepts User ID or User Mention',
 			required: true, 
-			type: ApplicationCommandOptionType.Mentionable,
+			type: ApplicationCommandOptionType.User,
 		},
 		{
 			name: 'reason',

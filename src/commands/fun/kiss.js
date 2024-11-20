@@ -54,7 +54,7 @@ module.exports = {
             name: 'target-user',
             description: 'The user you want to kiss.',
             required: true,
-            type: ApplicationCommandOptionType.Mentionable
+            type: ApplicationCommandOptionType.User
         }
     ],
 

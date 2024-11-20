@@ -45,7 +45,7 @@ module.exports = {
             name: 'target-user',
             description: 'The user you want to slap.',
             required: true,
-            type: ApplicationCommandOptionType.Mentionable
+            type: ApplicationCommandOptionType.User
         }
     ],
 
