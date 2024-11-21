@@ -1,8 +1,15 @@
-const { Client, Interaction, ApplicationCommandOptionType, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
-    callback: async (clinet, interaction) => {
-        const targetUserId = interaction.options.get('target-user').value;
+    data: new SlashCommandBuilder()
+        .setName('shoot')
+        .setDescription('"shoots" a user.')
+        .addUserOption(option =>
+            option.setName('member')
+                .setDescription('The member you want to "shoot"')
+                .setRequired(true)),
+    run: async ({ interaction, client, handler }) => {
+        const targetUserId = interaction.options.get('member').value;
 
         await interaction.deferReply();
 
@@ -16,42 +23,36 @@ module.exports = {
         ];
 
         let selectedGif = Math.floor(Math.random() * gifs.length);
-        const targetUser = await interaction.guild.members.fetch(targetUserId);
+        
+
+        const targetUser = await interaction.guild.members.fetch(targetUserId)
+            .then(console.log).catch(console.error);
 
         const embed = new EmbedBuilder()
-            .setDescription(`${interaction.member} shot ${targetUser}!!`);
+            .setDescription(`${interaction.member} is shooting ${targetUser}!!!`);
+            
 
         if (!targetUser) {
-            await interaction.followUp({ content: 'That user is not a member of this server.', ephemeral: true });
+            await interaction.followUp({ content: `That user is not a member of this server`, ephemeral: true });
             return;
         }
 
-        // "shoots" the user
+        //Gives cookie to the target user
 
         try {
             if (interaction.member === targetUser) {
-                embded.setDescription(`You can't do that ${interaction.member}, love yourself!`);
+                embed.setDescription(`${interaction.member}, let's not do that. <3'`);
+                
             }
             else {
                 embed.setImage(gifs[selectedGif]);
             }
 
             await interaction.followUp({ embeds: [embed] });
-
         } catch (error) {
             console.log(`There was an error when using this emote: ${error}`);
-
         }
+
+
     },
-
-    name: 'shoot',
-    description: '"Shoots" a user',
-    options: [
-        {
-            name: 'target-user',
-            description: 'The user you want to shoot',
-            required: true,
-            type: ApplicationCommandOptionType.User
-        }
-    ],
 }

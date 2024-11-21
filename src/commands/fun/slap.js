@@ -1,11 +1,19 @@
-const { Client, Interaction, ApplicationCommandOptionType, PermissionFlagsBits, EmbedBuilder} = require('discord.js');
-
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
-    callback: async (client, interaction) => {
-        const targetUserId = interaction.options.get('target-user').value;
+    data: new SlashCommandBuilder()
+        .setName(`slap`)
+        .setDescription(`Slaps a user`)
+        .addUserOption(option => 
+            option.setName(`member`)
+                .setDescription(`The member you want to slap`)
+                .setRequired(true)),
+
+    run: async ({ interaction, client, handler }) => {
+        const targetUserId = interaction.options.get('member').value;
 
         await interaction.deferReply();
+
         const gifs = [
             "https://media.tenor.com/MrhME3n9Z2UAAAAM/dungeong.gif",
             "https://media.tenor.com/KC56LsHlsY0AAAAM/cats-cat-slap.gif",
@@ -15,38 +23,31 @@ module.exports = {
             "https://media.tenor.com/E3OW-MYYum0AAAAM/no-angry.gif",
             "https://media.tenor.com/zXqvIewp3ToAAAAM/asobi-asobase.gif"
         ];
+
         let selectedGif = Math.floor(Math.random() * gifs.length);
 
-        const targetUser = await interaction.guild.members.fetch(targetUserId);
+        const targetUser = await interaction.guild.members.fetch(targetUserId)
+            .then(console.log).catch(console.error);
+
         const embed = new EmbedBuilder()
             .setDescription(`${interaction.member} slapped ${targetUser}!`);
 
         if (!targetUser) {
-            await interaction.editReply("That user is not a member of this server.");
+            await interaction.followUp({ content: `That user is not a member of this server`, ephemeral: true });
             return;
         }
 
-        if (interaction.member === targetUser) {
-            embed.setDescription(`${interaction.member}, you can't slap yourself!`);
-        }
-        // Slaps the user
-        try{
-            embed.setImage(gifs[selectedGif]);
+        try {
+            if (interaction.member === targetUser) {
+                embed.setDescription(`You can't slap yourself ${interaction.member}!`);
+            }
+            else {
+                embed.setImage(gifs[selectedGif]);
+            }
+
             await interaction.followUp({ embeds: [embed] });
         } catch (error) {
-            console.log(`There was an error when using this emote: ${error}`);
-
+            console.log(`There was an error using this emote: ${error}`);
         }
     },
-    name: 'slap',
-    description: 'Slaps a user',
-    options:[
-        {
-            name: 'target-user',
-            description: 'The user you want to slap.',
-            required: true,
-            type: ApplicationCommandOptionType.User
-        }
-    ],
-
 }

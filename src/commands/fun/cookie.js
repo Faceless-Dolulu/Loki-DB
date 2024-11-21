@@ -1,10 +1,15 @@
-const { Client, Interaction, ApplicationCommandOptionType, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
-    callback: async (client, interaction) => {
-        const targetUserId = interaction.options.get('target-user').value;
-
-        await interaction.deferReply();
+    data: new SlashCommandBuilder()
+        .setName('cookie')
+        .setDescription('Gives a user a cookie.')
+        .addUserOption(option =>
+            option.setName('member')
+                .setDescription('The member you want to give a cookie to')
+                .setRequired(true)),
+    run: async ({ interaction, client, handler }) => {
+        const targetUserId = await interaction.options.get('member');
 
         const gifs = [
             "https://media.tenor.com/gOp22b-UIj8AAAAM/cookie-sendcookie.gif",
@@ -15,38 +20,44 @@ module.exports = {
             "https://media.tenor.com/j2KwN5-ehG4AAAAM/make-it-rain-cookies.gif"
         ];
 
-        let selectedGif = Math.floor(Math.random() * gifs.length);
+        const selfGifs = [
+            "https://media.tenor.com/FDHHFVsVzcEAAAAM/damn-emoji.gif",
+                    "https://media.tenor.com/BkgZIBPMzIYAAAAj/bubu-eating.gif",
+                    "https://media.tenor.com/ZrhR2IrP52gAAAAM/eating-a-cookie-ricky-berwick.gif",
+                    "https://media.tenor.com/3zFbEZVoImAAAAAM/yum-yummy.gif",
+                    "https://media.tenor.com/kihD0lwCptsAAAAM/yoshi-cookies.gif",
+        ];
 
-        const targetUser = await interaction.guild.members.fetch(targetUserId);
-        const embed = new EmbedBuilder()
-            .setDescription(`${targetUser}, you recieved a cookie from ${interaction.member}!`);
+        let selectedGif =  Math.floor(Math.random() * gifs.length);
+        let selectedSelfGif =  Math.floor(Math.random() * selfGifs.length);
+
+        const targetUser =  await interaction.guild.members.fetch(targetUserId)
+            .then(console.log).catch(console.error);
+
+        const embed = await new EmbedBuilder()
+            .setDescription(`${targetUser}, you received a cookie from ${interaction.member}!`);
 
         if (!targetUser) {
-            await interaction.followUp({ content: 'That user is not a member of this server', ephemeral: true });
+            await interaction.reply({ content: `This user is not a member of this server`, ephemeral: true });
             return;
         }
 
-        // Gives cookie to the target user
+        //Gives cookie to the target user
+
         try {
             if (interaction.member === targetUser) {
                 embed.setDescription(`${interaction.member} gave themselves a cookie!`);
+                embed.setImage(selfGifs[selectedSelfGif]);
+            }
+            else {
+                embed.setImage(gifs[selectedGif]);
             }
 
-            embed.setImage(gifs[selectedGif]);
-
-            await interaction.followUp({ embeds: [embed] });
+            await interaction.reply({ embeds: [embed] });
         } catch (error) {
             console.log(`There was an error when using this emote: ${error}`);
         }
+
+
     },
-    name: 'cookie',
-    description: 'Gives a user a cookie',
-    options:[
-        {
-            name: 'target-user', 
-            description: 'The user you want to give a cookie to.',
-            required: true,
-            type: ApplicationCommandOptionType.User
-        }
-    ],
 }

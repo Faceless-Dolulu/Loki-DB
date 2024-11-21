@@ -1,11 +1,18 @@
-const { Client, Interaction, ApplicationCommandOptionType, PermissionFlagsBits, EmbedBuilder} = require('discord.js');
-
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
-    callback: async (client, interaction) => {
-        const targetUserId = interaction.options.get('target-user').value;
+    data: new SlashCommandBuilder()
+        .setName('hug')
+        .setDescription('Gives a user a hug')
+        .addUserOption(option =>
+            option.setName('member')
+                .setDescription('The member you want to give a hug')
+                .setRequired(true)),
+    run: async ({ interaction, client, handler }) => {
+        const targetUserId = interaction.options.get('member').value;
 
         await interaction.deferReply();
+
         const gifs = [
             "https://media.tenor.com/40yKTjst1T4AAAAj/bunny-hug-rabbit-hug.gif",
             "https://media.tenor.com/SG2Y2dkZvqoAAAAM/ori.gif",
@@ -19,41 +26,30 @@ module.exports = {
             "https://media.tenor.com/kkW-x5TKP-YAAAAM/seal-hug.gif",
             "https://media.tenor.com/BJ4FJrBw_7MAAAAM/oxabi-self-hug.gif"
         ];
-        let selectedGif = Math.floor(Math.random() * gifs.length);
-        let selectedSelfGif = Math.floor(Math.random() * selfGifs.length);
 
-        const targetUser = await interaction.guild.members.fetch(targetUserId);
+        let selectedGif = Math.floor(Math.random() * gifs.length);
+        let selectedSelfGif = Math.floor(Math.random() * gifs.length);
+
+        const targetUser = await interaction.guild.members.fetch(targetUserId)
+            .then(console.log).catch(console.error);
+
         const embed = new EmbedBuilder()
-            .setDescription(`${interaction.member} hugged ${targetUser}!`);
+            .setDescription(`${targetUser} recieved a hug from ${interaction.member}!`)
+            .setImage(gifs[selectedGif]);
 
         if (!targetUser) {
-            await interaction.editReply("That user is not a member of this server.");
+            await interaction.followUp({ content: `That user is not a member of this server`, ephemeral: true });
             return;
         }
 
-        // hugs the user
-        try{
+        try {
             if (interaction.member === targetUser) {
-                embed.setDescription(`${interaction.member} is hugging themself!`);
+                embed.setDescription(`${interaction.member} gave themselves a hug!`);
                 embed.setImage(selfGifs[selectedSelfGif]);
-            }
-            else{
-                embed.setImage(gifs[selectedGif]);
             }
             await interaction.followUp({ embeds: [embed] });
         } catch (error) {
             console.log(`There was an error when using this emote: ${error}`);
-
         }
     },
-    name: 'hug',
-    description: 'Hugs a user',
-    options:[
-        {
-            name: 'target-user',
-            description: 'The user you want to hug.',
-            required: true,
-            type: ApplicationCommandOptionType.User
-        }
-    ],
 }
