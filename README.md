@@ -12,3 +12,4 @@ Changelogs (V 0.0.3.0) (2024/11/20):
 Changelogs (V 0.1.0.0) (2024/11/21):
 - refactored Command/Event Handler to use CommandKit library
 - Ported previous commands to be compatible with new Command/Event handler
+- Added welcome messages
