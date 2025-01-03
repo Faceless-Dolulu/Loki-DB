@@ -26,4 +26,6 @@ Changelogs (V 0.2.0.0) (2025/01/03)
 - Added Server Specific Suggestion system
 - Added Server/User info command
 - Added Urban Dictionary command
+- Bot is now online 24/7
+
   
