@@ -1,4 +1,4 @@
-# Faceless DB 
+# Loki GPDB
 
 Changelogs (V 0.0.2.0) (2024/11/19): 
  - Added unban command.
