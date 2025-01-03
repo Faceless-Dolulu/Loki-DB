@@ -16,3 +16,14 @@ Changelogs (V 0.1.0.0) (2024/11/21):
 
 Changelogs (V 0.1.1.0) (2024/11/23):
 - Added goodbye messages
+
+Changelogs (V 0.2.0.0) (2025/01/03)
+- Merged all log configuration commands into one command
+- Temporarily removed "emote" commands
+- Added Starboard
+- Added Warns
+- Added Message Delete/Edit Logging
+- Added Server Specific Suggestion system
+- Added Server/User info command
+- Added Urban Dictionary command
+  
