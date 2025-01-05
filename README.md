@@ -29,8 +29,7 @@ Changelogs (V 0.2.0.0) (2025/01/03)
 - Bot is now online 24/7
 
 ChangeLogs (V 0.2.1.0) (2025/01/05)
-- Added new commands:
-   -Fun: 
-       -/throw (throw a random object)
-       -/topic (generates a conversation topic to get chat moving again)
-       -/8-ball (Beseech the magic 8-ball for answers to all your questions)
+- Added new commands: 
+  -/throw (throw a random object)
+  -/topic (generates a conversation topic to get chat moving again)
+  -/8-ball (Beseech the magic 8-ball for answers to all your questions)
